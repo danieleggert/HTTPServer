@@ -1,0 +1,37 @@
+//
+//  Debug.xcconfig
+//  HTTPServer
+//
+//  Created by Daniel Eggert on 28/04/2015.
+//  Copyright (c) 2015 Wire. All rights reserved.
+//
+
+#include "Release.xcconfig"
+
+
+// Architectures
+//
+ONLY_ACTIVE_ARCH = YES
+
+
+// Build Options
+//
+VALIDATE_PRODUCT = NO
+DEBUG_INFORMATION_FORMAT = dwarf
+
+
+// Apple LLVM - Code Generation
+//
+GCC_OPTIMIZATION_LEVEL = 0
+
+
+
+// Apple LLVM - Preprocessing
+//
+GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1 $(inherited)
+
+
+
+// Swift Compiler - Code Generation
+//
+SWIFT_OPTIMIZATION_LEVEL = -Onone

@@ -1,0 +1,103 @@
+//
+//  Release.xcconfig
+//  HTTPServer
+//
+//  Created by Daniel Eggert on 28/04/2015.
+//  Copyright (c) 2015 Wire. All rights reserved.
+//
+
+
+#include "Warnings.xcconfig"
+
+
+
+// Architectures
+//
+SDKROOT = iphoneos
+
+
+
+// Build Options
+//
+VALIDATE_PRODUCT = YES
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+
+
+// Code Signing
+//
+CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+
+
+// Deployment
+//
+COPY_PHASE_STRIP = NO
+TARGETED_DEVICE_FAMILY = 1,2
+IPHONEOS_DEPLOYMENT_TARGET = 8.3
+
+
+
+// Linking
+//
+DYLIB_CURRENT_VERSION = $(CURRENT_PROJECT_VERSION)
+
+
+
+// Search Paths
+//
+ALWAYS_SEARCH_USER_PATHS = NO
+
+
+
+
+// Versioning
+//
+VERSION_INFO_PREFIX = $(PRODUCT_NAME)
+VERSIONING_SYSTEM = apple-generic
+
+
+
+// Apple LLVM - Code Generation
+//
+GCC_DYNAMIC_NO_PIC = NO
+GCC_SYMBOLS_PRIVATE_EXTERN = NO
+GCC_NO_COMMON_BLOCKS = YES
+
+
+
+// Apple LLVM - Language
+//
+GCC_C_LANGUAGE_STANDARD = gnu99
+
+
+
+// Apple LLVM - Language C++
+//
+CLANG_CXX_LANGUAGE_STANDARD = gnu++0x
+CLANG_CXX_LIBRARY = libc++
+
+
+
+// Apple LLVM - Language - Modules
+//
+CLANG_ENABLE_MODULES = YES
+
+
+
+// Apple LLVM - Language - Objective C
+//
+CLANG_ENABLE_OBJC_ARC = YES
+
+
+
+// Apple LLVM - Preprocessing
+//
+ENABLE_STRICT_OBJC_MSGSEND = YES
+GCC_PREPROCESSOR_DEFINITIONS = DEBUG=0 $(inherited)
+
+
+
+// Swift Compiler - Code Generation
+//
+
+

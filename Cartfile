@@ -1,0 +1,5 @@
+#
+# Cartfile -- Carthage file
+# <https://github.com/Carthage/Carthage>
+#
+github "antitypical/Result" == 0.3.2

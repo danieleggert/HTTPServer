@@ -22,4 +22,4 @@ PRODUCT_NAME = $(TARGET_NAME)
 
 // Search Paths
 //
-FRAMEWORK_SEARCH_PATHS = $(SDKROOT)/Developer/Library/Frameworks $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
+FRAMEWORK_SEARCH_PATHS = $(SDKROOT)/Developer/Library/Frameworks $(inherited)

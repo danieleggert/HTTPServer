@@ -11,7 +11,7 @@ import SocketHelpers
 
 
 
-public typealias RequestHandler = (request: HTTPRequest, clientAddress: SocketServer.SocketAddress, response:(HTTPResponse?) -> ()) -> ()
+public typealias RequestHandler = (request: HTTPRequest, clientAddress: SocketServer.SocketAddress, responseHandler:(HTTPResponse?) -> ()) -> ()
 
 
 public struct HTTPRequest {
@@ -107,7 +107,7 @@ public func httpConnectionHandler(channel: dispatch_io_t, clientAddress: SocketS
         }
         switch request {
         case let .Complete(completeRequest, _):
-            handler(request: HTTPRequest(message: completeRequest), clientAddress: clientAddress, response: { (maybeResponse) -> () in
+            handler(request: HTTPRequest(message: completeRequest), clientAddress: clientAddress, responseHandler: { (maybeResponse) -> () in
                 if let response = maybeResponse {
                     assert(CFHTTPMessageIsRequest(response.message.backing) == 0, "Response can not be a request.")
                     dispatch_io_write(channel, 0, response.serializedData, queue) {

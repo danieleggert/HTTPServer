@@ -28,6 +28,7 @@ extension NSDate {
                     dateString = String.fromCString(UnsafePointer<CChar>(b.baseAddress))
                 }
             }
+            freelocale(locale)
         }
         return dateString!
     }

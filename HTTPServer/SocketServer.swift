@@ -8,27 +8,27 @@
 
 import Foundation
 import SocketHelpers
-import Result
 
 
-private func posixResult(functionName: String, call: () -> Int32) -> Result<Int32,NSError> {
+
+public enum SocketError : ErrorType {
+    case Error(POSIXError, String)
+    case NoPortAvailable
+}
+
+
+
+private func posixResult(functionName: String, call: () -> CInt) throws -> CInt {
     let result = call()
     if 0 <= result {
-        return Result(value: result)
-    } else {
-        let userInfo: [NSObject : AnyObject] = [
-            "strerror": String.fromCString(strerror(errno))!,
-            "function": functionName,
-        ]
-        let e = NSError(domain: NSPOSIXErrorDomain, code: Int(errno), userInfo: userInfo)
-        return Result(error: e)
+        return result
     }
+    throw SocketError.Error(POSIXError(rawValue: errno)!, functionName)
 }
 
 
 
 private let INADDR_ANY = in_addr(s_addr: in_addr_t(0))
-private let SocketServerErrorDomain: String = "SocketServer"
 
 
 public class SocketServer {
@@ -36,28 +36,22 @@ public class SocketServer {
     public typealias Accept = (dispatch_io_t, SocketAddress) -> ()
     
     public let port: UInt16
-    public let connectionHandler: Accept
     
     /// The accept handler will be called with a suspended dispatch I/O channel and the client's 'struct sockaddr' wrapped in an SocketAddress.
-    public static func withAcceptHandler(handler: Accept) -> Result<SocketServer,NSError> {
-        return posixResult("socket(2)") { socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) }.flatMap { (serverSocket) -> Result<SocketServer,NSError> in
-            return SocketServer.bindSocketToPort(serverSocket).flatMap { (port: UInt16) -> Result<SocketServer,NSError> in
-                return posixResult("fcntl(2) F_SETFL") { SocketHelper_fcntl_setFlag(serverSocket, O_NONBLOCK) }.flatMap { (_: Int32) -> Result<SocketServer,NSError> in
-                    let source = SocketServer.createDispatchSourceWithSocket(serverSocket, port: port, handler: handler)
-                    return Result(value: SocketServer(serverSocket: serverSocket, acceptSource: source, port: port, connectionHandler: handler))
-                }
-            }
-        }
+    public static func withAcceptHandler(handler: Accept) throws -> SocketServer {
+        let serverSocket = try posixResult("socket(2)") { socket(PF_INET, SOCK_STREAM, IPPROTO_TCP) }
+        let port = try SocketServer.bindSocketToPort(serverSocket)
+        try posixResult("fcntl(2) F_SETFL") { SocketHelper_fcntl_setFlag(serverSocket, O_NONBLOCK) }
+        return SocketServer(serverSocket: serverSocket, port: port, handler: handler)
     }
     
     let serverSocket: Int32
     let acceptSource: dispatch_source_t
     
-    private init(serverSocket ss: Int32, acceptSource source: dispatch_source_t, port p: UInt16, connectionHandler handler: Accept) {
+    private init(serverSocket ss: Int32, port p: UInt16, handler: Accept) {
         serverSocket = ss
-        acceptSource = source
         port = p
-        connectionHandler = handler
+        acceptSource = SocketServer.createDispatchSourceWithSocket(ss, port: p, handler: handler)
         
         // Resume the source:
         dispatch_resume(acceptSource);
@@ -78,11 +72,10 @@ public class SocketServer {
             for _ in 0..<pendingConnectionCount {
                 
                 if let (clientAddress, clientSocket) = SocketServer.acceptOnSocket(socket) {
-                    let clientName = "client (fd=\(clientSocket))"
                     let clientChannel = dispatch_io_create(DISPATCH_IO_STREAM, clientSocket, queue) {
                         (error) in
                         if error != 0 {
-                            println("Error on socket \(clientSocket): \(strerror(error)) (\(error))")
+                            print("Error on socket \(clientSocket): \(strerror(error)) (\(error))")
                         }
                     }
                     handler(clientChannel, SocketAddress(data: clientAddress))
@@ -106,7 +99,7 @@ public class SocketServer {
         
         switch clientSocket {
         case -1:
-            println("Failed to accept() a connection: \(String.fromCString(strerror(errno))) (\(errno))")
+            print("Failed to accept() a connection: \(String.fromCString(strerror(errno))) (\(errno))")
             return nil
         default:
             clientAddress.length = length
@@ -114,29 +107,22 @@ public class SocketServer {
         }
     }
     
-    private static func bindSocketToPort(socket: Int32) -> Result<UInt16,NSError> {
+    private static func bindSocketToPort(socket: Int32) throws -> UInt16 {
         // We'll loop through some ports and pick the first one that's available:
         for p in UInt16(8000 + arc4random_uniform(1000))...10000 {
             let portN = in_port_t(CFSwapInt16HostToBig(p))
             let addr = UnsafeMutablePointer<sockaddr_in>.alloc(1)
             addr.initialize(sockaddr_in(sin_len: 0, sin_family: sa_family_t(AF_INET), sin_port: portN, sin_addr: INADDR_ANY, sin_zero: (0, 0, 0, 0, 0, 0, 0, 0)))
+            defer { addr.destroy() }
             let addrP = UnsafePointer<sockaddr>(addr)
-            let bindResult = posixResult("bind(2)") { bind(socket, addrP, socklen_t(sizeof(sockaddr))) }
-            addr.destroy()
-            if let r = bindResult.analysis(ifSuccess: { (dummy: Int32) -> Result<UInt16,NSError>? in
-                return Result(value: p)
-            }, ifFailure: { (e: NSError) -> Result<UInt16,NSError>? in
-                if e.code != Int(EADDRINUSE) {
-                    return Result(error: e)
-                } else {
-                    return nil
-                }
-            }) {
-                return r
+            do {
+                try posixResult("bind(2)") { bind(socket, addrP, socklen_t(sizeof(sockaddr))) }
+                return p
+            } catch SocketError.Error(POSIXError.EADDRINUSE, _) {
+                continue
             }
         }
-        let e = NSError(domain: SocketServerErrorDomain, code: 1, userInfo: nil)
-        return Result(error: e)
+        throw SocketError.NoPortAvailable
     }
     
     
@@ -146,7 +132,7 @@ public class SocketServer {
     }
     
     /// A socket address. Wraps a sockaddr_in.
-    public struct SocketAddress : Printable {
+    public struct SocketAddress : CustomStringConvertible {
         init(data: NSData) {
             self.addressData = data
         }

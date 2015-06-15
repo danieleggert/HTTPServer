@@ -23,32 +23,32 @@ public struct HTTPRequest {
     }
     
     public var bodyData: NSData {
-        return CFHTTPMessageCopyBody(message).takeRetainedValue()
+        return CFHTTPMessageCopyBody(message)?.takeRetainedValue() ?? NSData()
     }
     
     public var method: String {
-        return CFHTTPMessageCopyRequestMethod(message).takeRetainedValue() as String
+        return CFHTTPMessageCopyRequestMethod(message)!.takeRetainedValue() as String
     }
     
     public var URL: NSURL {
-        return CFHTTPMessageCopyRequestURL(message).takeRetainedValue()
+        return CFHTTPMessageCopyRequestURL(message)!.takeRetainedValue()
     }
     
     public var allHeaderFields: [String:String] {
-        return CFHTTPMessageCopyAllHeaderFields(message).takeRetainedValue() as! [String:String]
+        if let fields = CFHTTPMessageCopyAllHeaderFields(message)?.takeRetainedValue() as? NSDictionary {
+            if let f = fields as? [String:String] {
+                return f
+            }
+        }
+        return [:]
     }
     
     public func headerField(fieldName: String) -> String? {
-        let v = CFHTTPMessageCopyHeaderFieldValue(message, fieldName)
-        if v.toOpaque() == COpaquePointer(nilLiteral: ()) {
-            return nil
-        } else {
-            return v.takeRetainedValue() as String
-        }
+        return CFHTTPMessageCopyHeaderFieldValue(message, fieldName)?.takeRetainedValue() as? String
     }
 }
 
-public struct HTTPResponse : Printable {
+public struct HTTPResponse : CustomStringConvertible {
     private var message: Message
     
     public init(statusCode: Int, statusDescription: String) {
@@ -59,7 +59,7 @@ public struct HTTPResponse : Printable {
     
     public var bodyData: NSData {
         get {
-            return CFHTTPMessageCopyBody(message.backing).takeRetainedValue()
+            return CFHTTPMessageCopyBody(message.backing)?.takeRetainedValue() ?? NSData()
         }
         set(data) {
             ensureUnique()
@@ -96,7 +96,7 @@ public func httpConnectionHandler(channel: dispatch_io_t, clientAddress: SocketS
     dispatch_io_read(channel, 0, Int.max, queue) {
         (done, data: dispatch_data_t!, error) in
         if (error != 0 && error != OperationCancelledError) {
-            println("Error on channel: \(String.fromCString(strerror(error))!) (\(error))")
+            print("Error on channel: \(String.fromCString(strerror(error))!) (\(error))")
         }
         // Append the data and update the request:
         if let d = data {
@@ -192,12 +192,12 @@ private enum RequestInProgress {
             fallthrough
         case .IncompleteHeader:
             let d = data as! NSData
-            let r = d.rangeOfData(NSData(bytes: "\r\n\r\n", length: 4), options: NSDataSearchOptions(0), range: NSMakeRange(0, d.length))
+            let r = d.rangeOfData(NSData(bytes: "\r\n\r\n", length: 4), options: NSDataSearchOptions(rawValue: 0), range: NSMakeRange(0, d.length))
             if r.location == NSNotFound {
                 return RequestInProgressAndRemainder(.IncompleteHeader, data)
             } else {
                 let end = Int(r.location + 4)
-                let (header, tail) = splitData(data, end)
+                let (header, tail) = splitData(data, location: end)
                 let message = CFHTTPMessageCreateEmpty(nil, Boolean(1)).takeRetainedValue()
                 message.appendDispatchData(header)
                 if CFHTTPMessageIsHeaderComplete(message) == 0 {
@@ -205,7 +205,7 @@ private enum RequestInProgress {
                 } else {
                     let bodyLength = message.messsageBodyLength()
                     if bodyLength <= dispatch_data_get_size(tail) {
-                        let (head, tail2) = splitData(tail, bodyLength)
+                        let (head, tail2) = splitData(tail, location: bodyLength)
                         message.appendDispatchData(head) // CFHTTPMessageSetBody() ?
                         return RequestInProgressAndRemainder(.Complete(message, bodyLength), tail2)
                     }
@@ -214,7 +214,7 @@ private enum RequestInProgress {
             }
         case let .IncompleteMessage(message, bodyLength):
             if bodyLength <= dispatch_data_get_size(data) {
-                let (head, tail) = splitData(data, bodyLength)
+                let (head, tail) = splitData(data, location: bodyLength)
                 message.appendDispatchData(head) // CFHTTPMessageSetBody() ?
                 return RequestInProgressAndRemainder(.Complete(message, bodyLength), tail)
             }
@@ -247,7 +247,7 @@ extension CFHTTPMessage {
         })
     }
     private func serialized() -> dispatch_data_t {
-        let data = CFHTTPMessageCopySerializedMessage(self).takeRetainedValue()
+        let data = CFHTTPMessageCopySerializedMessage(self)!.takeRetainedValue() as NSData
         let gcdData = dispatch_data_create(UnsafePointer<Void>(CFDataGetBytePtr(data)), Int(CFDataGetLength(data)), dispatch_get_global_queue(0, 0)) { () -> Void in
             Unmanaged.passRetained(data)
             return

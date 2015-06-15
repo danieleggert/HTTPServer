@@ -8,15 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		3E364C611A8123AB0007DA99 /* HTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E364C601A8123AB0007DA99 /* HTTPServer.swift */; };
-		3E8284501AEEBDC800FF7249 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E82844F1AEEBDC000FF7249 /* Result.framework */; };
-		3E8284511AEECEDF00FF7249 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E82844F1AEEBDC000FF7249 /* Result.framework */; };
-		3E8284531AEECF5900FF7249 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3E82844F1AEEBDC000FF7249 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3E8E9AE71AEE8551005992B6 /* SocketHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E8E9AE61AEE8551005992B6 /* SocketHelpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3E8E9AED1AEE8551005992B6 /* SocketHelpers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E8E9AE21AEE8551005992B6 /* SocketHelpers.framework */; };
 		3E8E9AF41AEE8551005992B6 /* SocketHelpersTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E8E9AF31AEE8551005992B6 /* SocketHelpersTests.m */; };
 		3E8E9AFD1AEE856E005992B6 /* Helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 3E8E9AFB1AEE856E005992B6 /* Helpers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3E8E9AFE1AEE856E005992B6 /* Helpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E8E9AFC1AEE856E005992B6 /* Helpers.m */; };
 		3E8E9AFF1AEE8682005992B6 /* SocketHelpers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3E8E9AE21AEE8551005992B6 /* SocketHelpers.framework */; };
+		3EAE043B1B28C7E80091F3A5 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAE043A1B28C7E80091F3A5 /* Errors.swift */; };
 		3EAFA75C1A80FC440054903F /* HTTPServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3EAFA75B1A80FC440054903F /* HTTPServer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3EAFA7621A80FC440054903F /* HTTPServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EAFA7561A80FC440054903F /* HTTPServer.framework */; };
 		3EAFA7691A80FC440054903F /* HTTPServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAFA7681A80FC440054903F /* HTTPServerTests.swift */; };
@@ -47,7 +45,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				3E8284531AEECF5900FF7249 /* Result.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +52,6 @@
 
 /* Begin PBXFileReference section */
 		3E364C601A8123AB0007DA99 /* HTTPServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPServer.swift; sourceTree = "<group>"; };
-		3E82844F1AEEBDC000FF7249 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = iOS/Result.framework; sourceTree = "<group>"; };
 		3E8E9AE21AEE8551005992B6 /* SocketHelpers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SocketHelpers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3E8E9AE51AEE8551005992B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E8E9AE61AEE8551005992B6 /* SocketHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocketHelpers.h; sourceTree = "<group>"; };
@@ -64,6 +60,7 @@
 		3E8E9AF31AEE8551005992B6 /* SocketHelpersTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SocketHelpersTests.m; sourceTree = "<group>"; };
 		3E8E9AFB1AEE856E005992B6 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Helpers.h; sourceTree = "<group>"; };
 		3E8E9AFC1AEE856E005992B6 /* Helpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Helpers.m; sourceTree = "<group>"; };
+		3EAE043A1B28C7E80091F3A5 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		3EAFA7561A80FC440054903F /* HTTPServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = HTTPServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EAFA75A1A80FC440054903F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3EAFA75B1A80FC440054903F /* HTTPServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HTTPServer.h; sourceTree = "<group>"; };
@@ -101,7 +98,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E8E9AFF1AEE8682005992B6 /* SocketHelpers.framework in Frameworks */,
-				3E8284501AEEBDC800FF7249 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,22 +106,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				3EAFA7621A80FC440054903F /* HTTPServer.framework in Frameworks */,
-				3E8284511AEECEDF00FF7249 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3E82844E1AEEBD9300FF7249 /* Carthage */ = {
-			isa = PBXGroup;
-			children = (
-				3E82844F1AEEBDC000FF7249 /* Result.framework */,
-			);
-			name = Carthage;
-			path = Carthage/Build;
-			sourceTree = "<group>";
-		};
 		3E8E9AE31AEE8551005992B6 /* SocketHelpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -172,7 +158,6 @@
 				3EAFA7651A80FC440054903F /* HTTPServerTests */,
 				3E8E9AE31AEE8551005992B6 /* SocketHelpers */,
 				3E8E9AF01AEE8551005992B6 /* SocketHelpersTests */,
-				3E82844E1AEEBD9300FF7249 /* Carthage */,
 				3EAFA7571A80FC440054903F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -192,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				3EAFA75B1A80FC440054903F /* HTTPServer.h */,
+				3EAE043A1B28C7E80091F3A5 /* Errors.swift */,
 				3EAFA7721A80FC6A0054903F /* SocketServer.swift */,
 				3E364C601A8123AB0007DA99 /* HTTPServer.swift */,
 				3EAFA7591A80FC440054903F /* Supporting Files */,
@@ -338,7 +324,8 @@
 		3EAFA74D1A80FC440054903F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = Wire;
 				TargetAttributes = {
 					3E8E9AE11AEE8551005992B6 = {
@@ -428,6 +415,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E364C611A8123AB0007DA99 /* HTTPServer.swift in Sources */,
+				3EAE043B1B28C7E80091F3A5 /* Errors.swift in Sources */,
 				3EAFA7731A80FC6A0054903F /* SocketServer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -463,6 +451,7 @@
 				CURRENT_PROJECT_VERSION = 1.0;
 				DYLIB_CURRENT_VERSION = 1.0;
 				INFOPLIST_FILE = SocketHelpers/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -473,6 +462,7 @@
 				CURRENT_PROJECT_VERSION = 1.0;
 				DYLIB_CURRENT_VERSION = 1.0;
 				INFOPLIST_FILE = SocketHelpers/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -486,6 +476,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = SocketHelpersTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -495,6 +486,7 @@
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1.0;
 				INFOPLIST_FILE = SocketHelpersTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -503,6 +495,8 @@
 			baseConfigurationReference = 3EC429FC1AEFBDE50034D67A /* Debug.xcconfig */;
 			buildSettings = {
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				ENABLE_TESTABILITY = YES;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
@@ -522,6 +516,7 @@
 				CURRENT_PROJECT_VERSION = 1.0;
 				DYLIB_CURRENT_VERSION = 1.0;
 				INFOPLIST_FILE = HTTPServer/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -533,6 +528,7 @@
 				CURRENT_PROJECT_VERSION = 1.0;
 				DYLIB_CURRENT_VERSION = 1.0;
 				INFOPLIST_FILE = HTTPServer/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -542,6 +538,7 @@
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1.0;
 				INFOPLIST_FILE = HTTPServerTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -551,6 +548,7 @@
 			buildSettings = {
 				CURRENT_PROJECT_VERSION = 1.0;
 				INFOPLIST_FILE = HTTPServerTests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.objc.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};

@@ -20,23 +20,23 @@ class HTTPServerTests: XCTestCase {
         super.setUp()
         
         let q = dispatch_get_global_queue(0, 0)
-        SocketServer.withAcceptHandler {
-            (channel, clientAddress) in
-            httpConnectionHandler(channel, clientAddress, q) {
-                (request, clientAddress, response) in
-                println("Request from \(clientAddress)")
-                var r = HTTPResponse(statusCode: 200, statusDescription: "Ok")
-                r.bodyData = "hey".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!
-                r.setHeaderField("Content-Length", value: "\(r.bodyData.length)")
-                r.setHeaderField("Foo", value: "Bar")
-                response(r)
+        do {
+            server = try SocketServer.withAcceptHandler {
+                (channel, clientAddress) in
+                httpConnectionHandler(channel, clientAddress: clientAddress, queue: q) {
+                    (request, clientAddress, response) in
+                    print("Request from \(clientAddress)")
+                    var r = HTTPResponse(statusCode: 200, statusDescription: "Ok")
+                    r.bodyData = "hey".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!
+                    r.setHeaderField("Content-Length", value: "\(r.bodyData.length)")
+                    r.setHeaderField("Foo", value: "Bar")
+                    response(r)
+                }
+                print("New connection")
             }
-            println("New connection")
-        }.analysis(ifSuccess: {
-            server = $0
-        }, ifFailure: {
-            XCTFail("Unable to create HTTP server: \($0)")
-        })
+        } catch let e {
+            XCTFail("Unable to create HTTP server: \(e)")
+        }
         port = server!.port
     }
     
@@ -65,14 +65,14 @@ class HTTPServerTests: XCTestCase {
         let request = NSURLRequest(URL: URLForServerWithPath("/"))
         
         var response: NSURLResponse?
-        var error: NSError?
-        if let data = NSURLConnection.sendSynchronousRequest(request, returningResponse: &response, error: &error) {
+        do {
+            let _ = try NSURLConnection.sendSynchronousRequest(request, returningResponse: &response)
             let httpResponse = response as! NSHTTPURLResponse
             let headers = httpResponse.allHeaderFields as! [String:String]
             XCTAssertEqual(headers["Foo"]!, "Bar")
             XCTAssertEqual(httpResponse.statusCode, 200)
-        } else {
-            XCTFail("Unable to get resource.")
+        } catch let error {
+            XCTFail("Unable to get resource: \(error)")
         }
     }
     

@@ -19,6 +19,9 @@
 		3EAFA7621A80FC440054903F /* HTTPServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EAFA7561A80FC440054903F /* HTTPServer.framework */; };
 		3EAFA7691A80FC440054903F /* HTTPServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAFA7681A80FC440054903F /* HTTPServerTests.swift */; };
 		3EAFA7731A80FC6A0054903F /* SocketServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAFA7721A80FC6A0054903F /* SocketServer.swift */; };
+		3EEE69251AF7F16E001569CD /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEE69241AF7F16E001569CD /* Utilities.swift */; };
+		3EEE69261AF7F16E001569CD /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEE69241AF7F16E001569CD /* Utilities.swift */; };
+		3EEE69281AF7F3EC001569CD /* UtilitiesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEE69271AF7F3EC001569CD /* UtilitiesTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +78,8 @@
 		3EC429FF1AEFC2300034D67A /* Tests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
 		3EC42A001AEFC3070034D67A /* README.markdown */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.markdown; sourceTree = "<group>"; };
 		3EC42A011AEFC8030034D67A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		3EEE69241AF7F16E001569CD /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		3EEE69271AF7F3EC001569CD /* UtilitiesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilitiesTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +185,7 @@
 				3EAE043A1B28C7E80091F3A5 /* Errors.swift */,
 				3EAFA7721A80FC6A0054903F /* SocketServer.swift */,
 				3E364C601A8123AB0007DA99 /* HTTPServer.swift */,
+				3EEE69241AF7F16E001569CD /* Utilities.swift */,
 				3EAFA7591A80FC440054903F /* Supporting Files */,
 			);
 			path = HTTPServer;
@@ -197,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				3EAFA7681A80FC440054903F /* HTTPServerTests.swift */,
+				3EEE69271AF7F3EC001569CD /* UtilitiesTests.swift */,
 				3EAFA7661A80FC440054903F /* Supporting Files */,
 			);
 			path = HTTPServerTests;
@@ -414,6 +421,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EEE69251AF7F16E001569CD /* Utilities.swift in Sources */,
 				3E364C611A8123AB0007DA99 /* HTTPServer.swift in Sources */,
 				3EAE043B1B28C7E80091F3A5 /* Errors.swift in Sources */,
 				3EAFA7731A80FC6A0054903F /* SocketServer.swift in Sources */,
@@ -424,7 +432,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EEE69261AF7F16E001569CD /* Utilities.swift in Sources */,
 				3EAFA7691A80FC440054903F /* HTTPServerTests.swift in Sources */,
+				3EEE69281AF7F3EC001569CD /* UtilitiesTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

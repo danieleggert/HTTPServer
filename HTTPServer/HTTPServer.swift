@@ -11,78 +11,12 @@ import SocketHelpers
 
 
 
-public typealias RequestHandler = (request: HTTPRequest, clientAddress: SocketServer.SocketAddress, responseHandler:(HTTPResponse?) -> ()) -> ()
+public typealias RequestHandler = (request: HTTPRequest, clientAddress: SocketAddress, responseHandler:(HTTPResponse?) -> ()) -> ()
 
 
-public struct HTTPRequest {
-    private let message: CFHTTPMessageRef
-    
-    private init(message m: CFHTTPMessageRef) {
-        message = m
-        assert(CFHTTPMessageIsRequest(message) != 0, "Message is a response, not a request.")
-    }
-    
-    public var bodyData: NSData {
-        return CFHTTPMessageCopyBody(message)?.takeRetainedValue() ?? NSData()
-    }
-    
-    public var method: String {
-        return CFHTTPMessageCopyRequestMethod(message)!.takeRetainedValue() as String
-    }
-    
-    public var URL: NSURL {
-        return CFHTTPMessageCopyRequestURL(message)!.takeRetainedValue()
-    }
-    
-    public var allHeaderFields: [String:String] {
-        if let fields = CFHTTPMessageCopyAllHeaderFields(message)?.takeRetainedValue() as? NSDictionary {
-            if let f = fields as? [String:String] {
-                return f
-            }
-        }
-        return [:]
-    }
-    
-    public func headerField(fieldName: String) -> String? {
-        return CFHTTPMessageCopyHeaderFieldValue(message, fieldName)?.takeRetainedValue() as? String
-    }
-}
-
-public struct HTTPResponse : CustomStringConvertible {
-    private var message: Message
-    
-    public init(statusCode: Int, statusDescription: String) {
-        message = Message(message: CFHTTPMessageCreateResponse(kCFAllocatorDefault, CFIndex(statusCode), statusDescription, kCFHTTPVersion1_1).takeRetainedValue())
-        // We don't support keep-alive
-        CFHTTPMessageSetHeaderFieldValue(message.backing, "Connection", "close")
-    }
-    
-    public var bodyData: NSData {
-        get {
-            return CFHTTPMessageCopyBody(message.backing)?.takeRetainedValue() ?? NSData()
-        }
-        set(data) {
-            ensureUnique()
-            CFHTTPMessageSetBody(message.backing, data)
-        }
-    }
-    
-    public mutating func setHeaderField(fieldName: String, value: String?) {
-        ensureUnique()
-        if let v = value {
-            CFHTTPMessageSetHeaderFieldValue(message.backing, fieldName, v)
-        } else {
-            CFHTTPMessageSetHeaderFieldValue(message.backing, fieldName, nil)
-        }
-    }
-    
-    public var description: String {
-        return NSString(data: message.backing.serialized() as! NSData, encoding: NSUTF8StringEncoding)! as String
-    }
-}
 
 /// This handler can be passed to SocketServer.withAcceptHandler to create an HTTP server.
-public func httpConnectionHandler(channel: dispatch_io_t, clientAddress: SocketServer.SocketAddress, queue: dispatch_queue_t, handler: RequestHandler) -> () {
+public func httpConnectionHandler(channel: dispatch_io_t, clientAddress: SocketAddress, queue: dispatch_queue_t, handler: RequestHandler) -> () {
     //dispatch_io_set_low_water(channel, 1);
     // high water mark defaults to SIZE_MAX
     dispatch_io_set_interval(channel, 10 * NSEC_PER_MSEC, DISPATCH_IO_STRICT_INTERVAL)
@@ -109,7 +43,6 @@ public func httpConnectionHandler(channel: dispatch_io_t, clientAddress: SocketS
         case let .Complete(completeRequest, _):
             handler(request: HTTPRequest(message: completeRequest), clientAddress: clientAddress, responseHandler: { (maybeResponse) -> () in
                 if let response = maybeResponse {
-                    assert(CFHTTPMessageIsRequest(response.message.backing) == 0, "Response can not be a request.")
                     dispatch_io_write(channel, 0, response.serializedData, queue) {
                         (done, data, error) in
                         if error != 0 || done {
@@ -138,29 +71,6 @@ public func httpConnectionHandler(channel: dispatch_io_t, clientAddress: SocketS
 //MARK:
 
 
-
-extension HTTPResponse {
-    
-    private var serializedData: dispatch_data_t {
-        return message.backing.serialized()
-    }
-    
-    private mutating func ensureUnique() {
-        if !isUniquelyReferencedNonObjC(&message) {
-            message = message.copy()
-        }
-    }
-    
-    private class Message {
-        let backing: CFHTTPMessageRef
-        init(message m: CFHTTPMessageRef) {
-            backing = m
-        }
-        func copy() -> Message {
-            return Message(message: CFHTTPMessageCreateCopy(kCFAllocatorDefault, backing).takeRetainedValue())
-        }
-    }
-}
 
 private func splitData(data: dispatch_data_t, location: Int) -> (dispatch_data_t, dispatch_data_t) {
     let head = dispatch_data_create_subrange(data, 0, location)
@@ -198,9 +108,9 @@ private enum RequestInProgress {
             } else {
                 let end = Int(r.location + 4)
                 let (header, tail) = splitData(data, location: end)
-                let message = CFHTTPMessageCreateEmpty(nil, Boolean(1)).takeRetainedValue()
+                let message = CFHTTPMessageCreateEmpty(nil, true).takeRetainedValue()
                 message.appendDispatchData(header)
-                if CFHTTPMessageIsHeaderComplete(message) == 0 {
+                if !CFHTTPMessageIsHeaderComplete(message) {
                     return RequestInProgressAndRemainder(.Error, data)
                 } else {
                     let bodyLength = message.messsageBodyLength()
@@ -225,33 +135,3 @@ private enum RequestInProgress {
     }
 }
 
-extension CFHTTPMessage {
-    private func messsageBodyLength() -> Int {
-        // https://tools.ietf.org/html/rfc2616 section 4.4 "Message Length"
-        // NSString * const method = CFBridgingRelease(CFHTTPMessageCopyRequestMethod(self.currentMessage));
-        let contentLength = HTTPMessageHeaderField(self, "Content-Length")
-        let transferEncoding = HTTPMessageHeaderField(self, "Transfer-Encoding")
-        if (contentLength == nil) && (transferEncoding == nil) {
-            return 0
-        }
-        if let l = contentLength {
-            let l2 = l as NSString
-            return Int(l2.integerValue)
-        }
-        return 0
-    }
-    private func appendDispatchData(data: dispatch_data_t) {
-        dispatch_data_apply(data, { (d, o, buffer, length) -> Bool in
-            CFHTTPMessageAppendBytes(self, UnsafePointer<UInt8>(buffer), CFIndex(length))
-            return true
-        })
-    }
-    private func serialized() -> dispatch_data_t {
-        let data = CFHTTPMessageCopySerializedMessage(self)!.takeRetainedValue() as NSData
-        let gcdData = dispatch_data_create(UnsafePointer<Void>(CFDataGetBytePtr(data)), Int(CFDataGetLength(data)), dispatch_get_global_queue(0, 0)) { () -> Void in
-            Unmanaged.passRetained(data)
-            return
-        }
-        return gcdData
-    }
-}

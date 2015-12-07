@@ -10,8 +10,8 @@
 
 
 
-extern int SocketHelper_fcntl_setFlag(int const fildes, int const flag);
-extern int SocketHelper_fcntl_getFlag(int const fildes, int const flag);
+extern int SocketHelper_fcntl_setFlags(int const fildes, int const flag);
+extern int SocketHelper_fcntl_getFlags(int const fildes);
 
 extern NSString *HTTPMessageHeaderField(CFHTTPMessageRef message, NSString *field);
 

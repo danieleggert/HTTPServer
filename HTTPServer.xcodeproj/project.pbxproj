@@ -22,6 +22,9 @@
 		3EEE69251AF7F16E001569CD /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEE69241AF7F16E001569CD /* Utilities.swift */; };
 		3EEE69261AF7F16E001569CD /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEE69241AF7F16E001569CD /* Utilities.swift */; };
 		3EEE69281AF7F3EC001569CD /* UtilitiesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EEE69271AF7F3EC001569CD /* UtilitiesTests.swift */; };
+		3EF9E10D1C14860300882E6C /* TCPSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF9E10C1C14860300882E6C /* TCPSocket.swift */; };
+		3EF9E10F1C15AC6100882E6C /* ClientSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF9E10E1C15AC6100882E6C /* ClientSocket.swift */; };
+		3EF9E1111C15B7B400882E6C /* HTTPMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EF9E1101C15B7B400882E6C /* HTTPMessage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +83,9 @@
 		3EC42A011AEFC8030034D67A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		3EEE69241AF7F16E001569CD /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		3EEE69271AF7F3EC001569CD /* UtilitiesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UtilitiesTests.swift; sourceTree = "<group>"; };
+		3EF9E10C1C14860300882E6C /* TCPSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPSocket.swift; sourceTree = "<group>"; };
+		3EF9E10E1C15AC6100882E6C /* ClientSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClientSocket.swift; sourceTree = "<group>"; };
+		3EF9E1101C15B7B400882E6C /* HTTPMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPMessage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,7 +190,10 @@
 				3EAFA75B1A80FC440054903F /* HTTPServer.h */,
 				3EAE043A1B28C7E80091F3A5 /* Errors.swift */,
 				3EAFA7721A80FC6A0054903F /* SocketServer.swift */,
+				3EF9E10C1C14860300882E6C /* TCPSocket.swift */,
+				3EF9E10E1C15AC6100882E6C /* ClientSocket.swift */,
 				3E364C601A8123AB0007DA99 /* HTTPServer.swift */,
+				3EF9E1101C15B7B400882E6C /* HTTPMessage.swift */,
 				3EEE69241AF7F16E001569CD /* Utilities.swift */,
 				3EAFA7591A80FC440054903F /* Supporting Files */,
 			);
@@ -422,7 +431,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				3EEE69251AF7F16E001569CD /* Utilities.swift in Sources */,
+				3EF9E10F1C15AC6100882E6C /* ClientSocket.swift in Sources */,
 				3E364C611A8123AB0007DA99 /* HTTPServer.swift in Sources */,
+				3EF9E1111C15B7B400882E6C /* HTTPMessage.swift in Sources */,
+				3EF9E10D1C14860300882E6C /* TCPSocket.swift in Sources */,
 				3EAE043B1B28C7E80091F3A5 /* Errors.swift in Sources */,
 				3EAFA7731A80FC6A0054903F /* SocketServer.swift in Sources */,
 			);

@@ -12,7 +12,7 @@ import Foundation
 extension NSDate {
     /// Returns the date formatted according to RFC 2616 section 3.3.1
     /// specifically RFC 822, updated by RFC 1123
-    public func HTTPFormattedDateString(timeZone: NSTimeZone = NSTimeZone.systemTimeZone()) -> String {
+    public func HTTPFormattedDateString(timeZone timeZone: NSTimeZone = NSTimeZone.systemTimeZone()) -> String {
         let timeZoneString = timeZone.abbreviation ?? "GMT"
         var dateString: String? = nil
         timeZoneString.withCString { (timeZonePointer) -> () in

@@ -13,12 +13,12 @@
 
 
 
-int SocketHelper_fcntl_setFlag(int const fildes, int const flag)
+int SocketHelper_fcntl_setFlags(int const fildes, int const flags)
 {
-    return fcntl(fildes, F_SETFL, flag);
+    return fcntl(fildes, F_SETFL, flags);
 }
 
-int SocketHelper_fcntl_getFlag(int const fildes, int const flag)
+int SocketHelper_fcntl_getFlags(int const fildes)
 {
     return fcntl(fildes, F_GETFL);
 }

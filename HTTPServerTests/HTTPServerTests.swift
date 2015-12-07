@@ -21,9 +21,8 @@ class HTTPServerTests: XCTestCase {
         
         let q = dispatch_get_global_queue(0, 0)
         do {
-            server = try SocketServer.withAcceptHandler {
-                (channel, clientAddress) in
-                httpConnectionHandler(channel, clientAddress: clientAddress, queue: q) {
+            server = try SocketServer() { channel in
+                httpConnectionHandler(channel.channel, clientAddress: channel.address, queue: q) {
                     (request, clientAddress, response) in
                     print("Request from \(clientAddress)")
                     var r = HTTPResponse(statusCode: 200, statusDescription: "Ok")
